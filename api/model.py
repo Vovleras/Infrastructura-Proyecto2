@@ -1,7 +1,7 @@
 import ray
 from arch import arch_model
 
-ray.init(ignore_reinit_error=True)
+ray.init(address="ray://ray:10001", namespace="default")
 
 @ray.remote
 def predict_volatility_ray(x, fecha=None):

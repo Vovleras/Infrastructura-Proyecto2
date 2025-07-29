@@ -1,12 +1,17 @@
-# Usa una imagen base de Python
-FROM python:3.11-slim
+FROM python:3.9-slim
+
 
 WORKDIR /app
 
-COPY api/ /app
+# Copiar primero los requirements
+COPY requirements.txt /app/
 
+# Instalar dependencias
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
+
+# Luego copiar el código fuente
+COPY api/ /app
 
 # Expone el puerto que usará FastAPI
 EXPOSE 8000
