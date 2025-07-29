@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - ray
+    environment:
+      - RAY_ADDRESS=http://ray:8265
+    networks:
+      - infra-net
+
+  ray:
+    image: rayproject/ray:2.19.0
+    ports:
+      - "8265:8265"  # Ray dashboard
+    command: >
+      ray start --head --dashboard-host 0.0.0.0 --port=6379 --dashboard-port=8265
+    networks:
+      - infra-net
+
+networks:
+  infra-net:
+  
