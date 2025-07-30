@@ -2,22 +2,25 @@ version: "3.9"
 
 services:
   api:
-    build: 
-      context: ./api
+    build:
+      context: .
+      dockerfile: api/Dockerfile
     ports:
       - "8000:8000"
     depends_on:
       - ray
     environment:
       - RAY_ADDRESS=ray://ray:10001
+    volumes:
+      - .:/app
     networks:
       - infra-net
 
   ray:
     build:
-      context: ./ray
+      context: ./parallel_ray
     ports:
-      - "8265:8265"   # Ray Dashboard (UI)
+      - "8265:8265" # Ray Dashboard (UI)
       - "10001:10001" # Ray Client protocol port
     networks:
       - infra-net
