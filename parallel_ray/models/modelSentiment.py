@@ -181,18 +181,33 @@ class ModelSentiment:
 
         return portfolio_df
     
-    def graphic_engament_ratio(self,portfolio_df):
+    def graphic_engagement_ratio(self, portfolio_df):
         portfolios_cumulative_return = np.exp(np.log1p(portfolio_df).cumsum()).sub(1)
 
-        portfolios_cumulative_return.plot(figsize=(16,6))
-
-        plt.title('Twitter Engagement Ratio Strategy Return Over Time')
-
-        plt.gca().yaxis.set_major_formatter(mtick.PercentFormatter(1))
-
-        plt.ylabel('Return')
-
-        plt.show()
+        # En lugar de plt.show(), retornar datos para el frontend
+        chart_data = []
+        
+        for date, row in portfolios_cumulative_return.iterrows():
+            data_point = {
+                'date': date.strftime('%Y-%m-%d'),
+            }
+            
+            # Agregar cada columna del portfolio como serie de datos
+            for column in portfolios_cumulative_return.columns:
+                if pd.notna(row[column]):  # Solo si no es NaN
+                    data_point[column] = float(row[column] * 100)  # Convertir a porcentaje
+            
+            chart_data.append(data_point)
+        
+        # Información adicional para el gráfico
+        chart_info = {
+            'data': chart_data,
+            'title': 'Twitter Engagement Ratio Strategy Return Over Time',
+            'yAxisLabel': 'Return (%)',
+            'columns': list(portfolios_cumulative_return.columns)
+        }
+        
+        return chart_info
     
     def test_ray_connection(self):
         """

@@ -169,15 +169,15 @@ class Model:
 
         strategy_cumulative_return = np.exp(np.log1p(daily_return_df).cumsum()).sub(1)
 
-        strategy_cumulative_return.plot(figsize=(16,6))
-
-        plt.title('Intraday Strategy Returns')
-
-        plt.gca().yaxis.set_major_formatter(mtick.PercentFormatter(1))
-
-        plt.ylabel('Return')
-
-        plt.show()
+        chart_data = []
+        for date, value in strategy_cumulative_return.items():
+            chart_data.append({
+                'date': date.strftime('%Y-%m-%d'),
+                'returns': float(value * 100),  # Convertir a porcentaje
+                'returnsRaw': float(value)      # Valor original
+            })
+        
+        return chart_data
         
     def run_complete_strategy(self):
         """
@@ -209,6 +209,7 @@ class Model:
         
         jsonFinal = {
             "message": "Estrategia ejecutada exitosamente",
+            "chart_data": self.intraday_strategy_returns(daily_returns),  
             "daily_returns": daily_returns.to_dict(),
             "total_days": len(daily_returns),
             "total_return": float(daily_returns.sum()),

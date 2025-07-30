@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
 import pandas as pd
@@ -12,6 +13,15 @@ from parallel_ray.models import modelSentiment
 
 
 app = FastAPI()
+
+# Configurar CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class SerieInput(BaseModel):
     serie: List[float]
@@ -81,11 +91,18 @@ async def get_predict_sentiment():
         prices_df = model.parallel_ray_sentiment(sentiment_df)
         portfolio_df = model.portfolio_analysis(prices_df, fixed_dates)
         final_portfolio = model.add_benchmark_comparison(portfolio_df)
+        
+        # Generar datos del gráfico
+        chart_info = model.graphic_engagement_ratio(final_portfolio)
+        
         return {
             "message":"Análisis de sentiment completado",
-            "data" : {"portfolio": final_portfolio.to_dict(),
-                      "total_periods" : len(final_portfolio),
-                      "date range": {"start": str(final_portfolio.index.min()), "end": str(final_portfolio.index.max())}}
+            "data" : {
+                "portfolio": final_portfolio.to_dict(),
+                "chart_data": chart_info,  # Agregar datos del gráfico
+                "total_periods" : len(final_portfolio),
+                "date range": {"start": str(final_portfolio.index.min()), "end": str(final_portfolio.index.max())}
+            }
         }
         
     except Exception as e:
