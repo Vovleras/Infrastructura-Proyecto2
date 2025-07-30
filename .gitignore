@@ -1,5 +1,5 @@
 env/
 data/
-api/__pycache__/}
-parallel_ray/models/__pycache__/
-parallel_ray/__pycache__/
+api/__pycache__
+parallel_ray/models/__pycache__
+parallel_ray/__pycache__
