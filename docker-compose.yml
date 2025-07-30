@@ -3,7 +3,8 @@ version: "3.9"
 services:
   api:
     build: 
-      context: ./api
+      context: .
+      dockerfile: api/Dockerfile
     ports:
       - "8000:8000"
     depends_on:
@@ -15,7 +16,7 @@ services:
 
   ray:
     build:
-      context: ./ray
+      context: ./parallel_ray
     ports:
       - "8265:8265"   # Ray Dashboard (UI)
       - "10001:10001" # Ray Client protocol port

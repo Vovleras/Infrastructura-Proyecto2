@@ -6,6 +6,8 @@ import os
 import pandas_ta 
 import ray
 import matplotlib.ticker as mtick
+import json
+from datetime import datetime
 
 
 class Model:
@@ -43,9 +45,12 @@ class Model:
 
     def parallel_model(self):
                 
-        # Reiniciar Ray
-        ray.shutdown()
-        ray.init()
+        # Conectar a Ray cluster o inicializar localmente
+        if not ray.is_initialized():
+            try:
+                ray.init(address="ray://ray:10001")
+            except:
+                ray.init()
 
         daily_df = self.daily_df
 
@@ -81,28 +86,41 @@ class Model:
         # Limpiar filas con valores faltantes
         daily_df = daily_df.dropna()
         
+        # Actualizar el estado de la clase
+        self.daily_df = daily_df
+        return daily_df
+        
         
         
     def execute_parallel_predictions(self):
         
         daily_df = self.daily_df
         
+        # Calcular premium de predicción (diferencia relativa entre predicción y varianza histórica)
         daily_df['prediction_premium'] = (daily_df['predictions']-daily_df['variance'])/daily_df['variance']
 
+        # Calcular desviación estándar del premium en ventana móvil de 180 días
         daily_df['premium_std'] = daily_df['prediction_premium'].rolling(180).std()
 
+        # Generar señales diarias:
+        # 1: Alta volatilidad esperada (premium > 1 std)
+        # -1: Baja volatilidad esperada (premium < -1 std)
+        # NaN: Sin señal clara
         daily_df['signal_daily'] = daily_df.apply(lambda x: 1 if (x['prediction_premium']>x['premium_std'])
                                                 else (-1 if (x['prediction_premium']<x['premium_std']*-1) else np.nan),
                                                 axis=1)
 
+        # Shifear señales un día hacia adelante (para evitar look-ahead bias)
         daily_df['signal_daily'] = daily_df['signal_daily'].shift()
 
-        daily_df
+        # Actualizar el estado de la clase
+        self.daily_df = daily_df
+        return daily_df
      
      
 
     def trading_signals(self):
-         daily_df = self.daily_df
+        daily_df = self.daily_df
         intraday_5min_df = self.intraday_df
         
         final_df = intraday_5min_df.reset_index()\
@@ -131,15 +149,6 @@ class Model:
 
         return final_df
         
-    def graphic_frequency(self):
-        
-        daily_df = self.daily_df
-        plt.style.use('ggplot')
-
-        daily_df['signal_daily'].plot(kind='hist')
-
-        plt.show()
-        
     def strategy_returns(self, final_df):
         
         final_df['return_sign'] = final_df.apply(lambda x: -1 if (x['signal_daily']==1)&(x['signal_intraday']==1)
@@ -155,8 +164,7 @@ class Model:
 
         daily_return_df = final_df.groupby(pd.Grouper(freq='D'))['strategy_return'].sum()
         return daily_return_df
-        
-    
+
     def intraday_strategy_returns(self, daily_return_df):
 
         strategy_cumulative_return = np.exp(np.log1p(daily_return_df).cumsum()).sub(1)
@@ -169,13 +177,66 @@ class Model:
 
         plt.ylabel('Return')
 
-        plt.show()        
+        plt.show()
         
+    def run_complete_strategy(self):
+        """
+        Ejecuta el pipeline completo de la estrategia de trading:
+        1. Carga datos
+        2. Ejecuta predicciones paralelas con Ray
+        3. Genera señales diarias
+        4. Combina con señales intradiarias
+        5. Calcula retornos de la estrategia
+        6. Guarda estadísticas en JSON
         
+        Returns:
+            dict: Diccionario con todas las estadísticas de la estrategia
+        """
+        print("Cargando datos...")
+        self.load_data()
         
+        print("Ejecutando predicciones paralelas con Ray...")
+        self.parallel_model()
         
-       
-       
-
+        print("Generando señales diarias...")
+        self.execute_parallel_predictions()
         
+        print("Combinando con señales intradiarias...")
+        final_df = self.trading_signals()
         
+        print("Calculando retornos de estrategia...")
+        daily_returns = self.strategy_returns(final_df)
+        
+        jsonFinal = {
+            "message": "Estrategia ejecutada exitosamente",
+            "daily_returns": daily_returns.to_dict(),
+            "total_days": len(daily_returns),
+            "total_return": float(daily_returns.sum()),
+            "avg_daily_return": float(daily_returns.mean()),
+            "volatility": float(daily_returns.std())
+        }
+        
+        return jsonFinal
+    
+    def test_ray_connection(self):
+        """
+        Prueba la conexión con Ray
+        """
+        try:
+            if not ray.is_initialized():
+                try:
+                    ray.init(address="ray://ray:10001")
+                except:
+                    ray.init()
+            
+            # Prueba simple
+            @ray.remote
+            def test_function(x):
+                return x * 2
+            
+            result = ray.get(test_function.remote(5))
+            return result == 10
+            
+        except Exception as e:
+            print(f"Error en Ray: {e}")
+            return False
