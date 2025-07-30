@@ -6,6 +6,7 @@ import ray
 
 # Import local modelGarch
 from parallel_ray.models import modelGarch
+from parallel_ray.models import modelSentiment
 
 
 
@@ -62,3 +63,30 @@ async def root():
 @app.get("/health")
 async def health_check():
     return {"status": "healthy", "ray_available": ray.is_initialized()}
+
+@app.get("/predictSentiment")
+async def get_predict_sentiment():
+    try:
+        
+        model = modelSentiment.ModelSentiment()
+        
+        # Verificar conexión Ray antes de ejecutar
+        if not model.test_ray_connection():
+            raise HTTPException(status_code=500, detail="Error al conectar con Ray.")
+        
+        sentiment_df = model.load_data()
+        aggregated_df = model.aggregate_sentiment(sentiment_df)
+        filtered_df = model.filtered_sentiment(aggregated_df)
+        fixed_dates = model.fixed_dates(filtered_df)
+        prices_df = model.parallel_ray_sentiment(sentiment_df)
+        portfolio_df = model.portfolio_analysis(prices_df, fixed_dates)
+        final_portfolio = model.add_benchmark_comparison(portfolio_df)
+        return {
+            "message":"Análisis de sentiment completado",
+            "data" : {"portfolio": final_portfolio.to_dict(),
+                      "total_periods" : len(final_portfolio),
+                      "date range": {"start": str(final_portfolio.index.min()), "end": str(final_portfolio.index.max())}}
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error en la predicción: {str(e)}")

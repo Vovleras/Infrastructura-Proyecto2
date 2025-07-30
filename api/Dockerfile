@@ -14,5 +14,5 @@ COPY . .
 # Expone el puerto
 EXPOSE 8000
 
-# Ejecuta con uvicorn como módulo, desde el root
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Ejecuta con uvicorn como módulo, desde el root con hot-reload para desarrollo
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
