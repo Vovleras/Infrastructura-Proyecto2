@@ -25,5 +25,14 @@ services:
     networks:
       - infra-net
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - infra-net
+
 networks:
   infra-net:
