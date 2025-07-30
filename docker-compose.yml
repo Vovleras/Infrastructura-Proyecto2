@@ -2,7 +2,8 @@ version: "3.9"
 
 services:
   api:
-    build: .
+    build: 
+      context: ./api
     ports:
       - "8000:8000"
     depends_on:
@@ -13,12 +14,11 @@ services:
       - infra-net
 
   ray:
-    image: rayproject/ray:2.10.0
+    build:
+      context: ./ray
     ports:
       - "8265:8265"   # Ray Dashboard (UI)
       - "10001:10001" # Ray Client protocol port
-    command: >
-      ray start --head --block --dashboard-host 0.0.0.0 --port=6379 --dashboard-port=8265 --ray-client-server-port=10001
     networks:
       - infra-net
 

@@ -23,3 +23,19 @@ async def predict_volatility(data: SerieInput):
     result_ref = predict_volatility_ray.remote(serie, data.fecha or "sin fecha")
     result = ray.get(result_ref)
     return result
+
+@app.get("/")
+async def root():
+    return {
+        "message": "API de Predicción de Volatilidad",
+        "version": "1.0.0",
+        "endpoints": {
+            "predict": "/predict (POST)",
+            "docs": "/docs",
+            "health": "/health"
+        }
+    }
+
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy", "ray_available": ray.is_initialized()}
