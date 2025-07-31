@@ -29,36 +29,35 @@ El proyecto está dividido en tres componentes principales:
 
 - ### Instalar Docker
   - sudo yum update -y
-  -sudo yum install docker -y
+  - sudo yum install docker -y
 
-### Iniciar Docker y habilitarlo al arranque
-sudo systemctl start docker
-sudo systemctl enable docker
+- ### Iniciar Docker y habilitarlo al arranque
+  - sudo systemctl start docker
+  - sudo systemctl enable docker
 
-### Añadir tu usuario al grupo docker
-sudo usermod -aG docker ec2-user
+- ### Añadir tu usuario al grupo docker
+  - sudo usermod -aG docker ec2-user
 
-### Instalar Docker Compose v2
-sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
+- ### Instalar Docker Compose v2
+  - sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  - sudo chmod +x /usr/local/bin/docker-compose
 
-### Verifica instalación
-docker --version
-docker-compose --version
+- ### Verifica instalación
+  - docker --version
+  - docker-compose --version
 
 3. Agregar proyecto a la instancia
 
-### Clonar Repositorio
-git clone https://github.com/Vovleras/Infrastructura-Proyecto2.git
+- ### Clonar Repositorio
+  - git clone https://github.com/Vovleras/Infrastructura-Proyecto2.git
 
-### Acceder al repositorio 
-cd Infrastructura-Proyecto2
+- ### Acceder al repositorio 
+  - cd Infrastructura-Proyecto2
 
 4. Ejecución proyecto
 
-### Ejecución Docker Compose
-
-sudo docker-compose up --build -d
+- ### Ejecución Docker Compose
+  - sudo docker-compose up --build -d
   
 ## Acceso
 Los servicios estarán disponibles en:
