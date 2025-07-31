@@ -31,32 +31,32 @@ El proyecto está dividido en tres componentes principales:
   - sudo yum update -y
   - sudo yum install docker -y
 
-- ### Iniciar Docker y habilitarlo al arranque
+- **Iniciar Docker y habilitarlo el arranque**
   - sudo systemctl start docker
   - sudo systemctl enable docker
 
-- ### Añadir tu usuario al grupo docker
+- **Añadir tu usuario al grupo docker**
   - sudo usermod -aG docker ec2-user
 
-- ### Instalar Docker Compose v2
+- **Instalar Docker Compose v2**
   - sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
   - sudo chmod +x /usr/local/bin/docker-compose
 
-- ### Verifica instalación
+- **Verifica instalación**
   - docker --version
   - docker-compose --version
 
 3. Agregar proyecto a la instancia
 
-- ### Clonar Repositorio
+- **Clonar Repositorio**
   - git clone https://github.com/Vovleras/Infrastructura-Proyecto2.git
 
-- ### Acceder al repositorio 
+- **Acceder al repositorio**
   - cd Infrastructura-Proyecto2
 
 4. Ejecución proyecto
 
-- ### Ejecución Docker Compose
+- **Ejecución Docker Compose**
   - sudo docker-compose up --build -d
   
 ## Acceso
