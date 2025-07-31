@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = "http://44.211.38.245:8000";
 
 export const apiService = {
   // Verificar salud de la API
