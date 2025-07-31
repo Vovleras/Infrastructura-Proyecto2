@@ -39,9 +39,6 @@ export default function PredictionCard() {
         <div className="results">
           <h3>Resultados:</h3>
           <Chart data={prediction.data} type="volatility" />
-          <div className="summary">
-            <p>Total Return: {prediction.data.total_return?.toFixed(2)}%</p>
-          </div>
         </div>
       )}
     </div>

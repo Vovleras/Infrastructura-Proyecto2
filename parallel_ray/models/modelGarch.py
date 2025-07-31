@@ -173,25 +173,14 @@ class Model:
         for date, value in strategy_cumulative_return.items():
             chart_data.append({
                 'date': date.strftime('%Y-%m-%d'),
-                'returns': float(value * 100),  # Convertir a porcentaje
-                'returnsRaw': float(value)      # Valor original
+                'returns': float(value * 100),  
+                'returnsRaw': float(value)      
             })
         
         return chart_data
         
     def run_complete_strategy(self):
-        """
-        Ejecuta el pipeline completo de la estrategia de trading:
-        1. Carga datos
-        2. Ejecuta predicciones paralelas con Ray
-        3. Genera señales diarias
-        4. Combina con señales intradiarias
-        5. Calcula retornos de la estrategia
-        6. Guarda estadísticas en JSON
-        
-        Returns:
-            dict: Diccionario con todas las estadísticas de la estrategia
-        """
+       
         print("Cargando datos...")
         self.load_data()
         
