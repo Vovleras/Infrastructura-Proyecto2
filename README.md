@@ -37,7 +37,7 @@ Los servicios estarán disponibles en:
 ## Autores
 - **Victoria Andrea Volveras Parra**
 - **Emily Nuñez Ordoñez** 
-- **Salome Acosta Montaño** 
-- **Erik Santiago Amariles Solarte ** 
+- **Salomé Acosta Montaño** 
+- **Erik Santiago Amariles Solarte** 
 - **Sheila Valencia Chito** 
 
