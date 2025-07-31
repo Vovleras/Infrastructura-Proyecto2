@@ -3,7 +3,7 @@
 
 Este proyecto implementa un sistema distribuido para predicción de volatilidad financiera utilizando modelos GARCH y análisis de Sentiment, con paralelización mediante Ray y una interfaz web interactiva.
 
-##Arquitectura
+## Arquitectura
 
 El proyecto está dividido en tres componentes principales:
 - **API Backend** (FastAPI + Ray): Modelos de predicción y procesamiento distribuido
