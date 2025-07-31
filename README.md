@@ -15,7 +15,7 @@ El proyecto está dividido en tres componentes principales:
 - Python 3.11+
 - Node.js 18+
   
-##Acceso
+## Acceso
 Los servicios estarán disponibles en:
 - **Frontend**:  http://23.22.8.172:3000/
 - **API**: http://23.22.8.172:8000/docs
