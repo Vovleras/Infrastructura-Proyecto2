@@ -19,17 +19,17 @@ El proyecto está dividido en tres componentes principales:
 
 1. Creación de instancia en EC2 :
 
-- **Tipo**: t3.large.
-- **Grupos de seguridad**: Reglas de entrada tipo SSH, HTTP, TCP personalizado (Puertos: 8000, 3000, 8265, 10001).
-- **Plataforma**: AWS Amazon Linux.
-- **Key**: Vockey.
-- **Elastic IP**: IPv4 public se configuró como una IP elástica fija (23.22.8.172) conectada a la instancia EC2.
+  - **Tipo**: t3.large.
+  - **Grupos de seguridad**: Reglas de entrada tipo SSH, HTTP, TCP personalizado (Puertos: 8000, 3000, 8265, 10001).
+  - **Plataforma**: AWS Amazon Linux.
+  - **Key**: Vockey.
+  - **Elastic IP**: IPv4 public se configuró como una IP elástica fija (23.22.8.172) conectada a la instancia EC2.
   
 2. Conexión de la instancia por medio de EC2 Instance Connect:
 
-- **Instalar Docker**
-  - sudo yum update -y
-  - sudo yum install docker -y
+  - **Instalar Docker**
+    - sudo yum update -y
+    - sudo yum install docker -y
 
 - **Iniciar Docker y habilitarlo el arranque**
   - sudo systemctl start docker
