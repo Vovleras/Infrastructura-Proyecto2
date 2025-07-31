@@ -27,7 +27,7 @@ El proyecto está dividido en tres componentes principales:
   
 2. Conexión de la instancia por medio de EC2 Instance Connect:
 
-- ### Instalar Docker
+- **Instalar Docker**
   - sudo yum update -y
   - sudo yum install docker -y
 
